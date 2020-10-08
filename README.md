@@ -48,7 +48,7 @@ There is some setup inside the code with which you need to modify before you can
 * ```#define NUM_LEDS 150``` tells the program how many addressable LEDS are in your strip.
 * ```LEDS.addLeds<LED_TYPE, LED_DT, COLOR_ORDER>(leds, NUM_LEDS);```
 #### In the setup method:
-You need to decide which of the following methods you need to initialize your LED strip in FastLed
+You need to decide which of the following methods you need to use in order to initialize your LED strip in FastLED
 * ```LEDS.addLeds<LED_TYPE, LED_DT, COLOR_ORDER>(leds, NUM_LEDS);``` This is to be used with WS2812.     
 * ```LEDS.addLeds<LED_TYPE, LED_DT, LED_CK, COLOR_ORDER>(leds, NUM_LEDS);``` This is to be used with APA102
    * Uncomment the method for your respective LED strip, and comment out the unused one.
