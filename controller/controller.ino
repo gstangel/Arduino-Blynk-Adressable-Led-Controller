@@ -29,7 +29,7 @@ void setup() {
 }
 
 
-//main loop
+//main loop 
 void loop() {
   //change the rate at which colors change
   //used for mutiple animations
