@@ -1,0 +1,2 @@
+blynklib==0.2.6
+pyserial==3.4
