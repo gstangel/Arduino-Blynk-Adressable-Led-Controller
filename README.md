@@ -49,8 +49,8 @@ There is some setup inside the code with which you need to modify before you can
 * ```LEDS.addLeds<LED_TYPE, LED_DT, COLOR_ORDER>(leds, NUM_LEDS);```
 #### In the setup method:
 You need to decide which of the following methods you need to use in order to initialize your LED strip in FastLED
-* ```LEDS.addLeds<LED_TYPE, LED_DT, COLOR_ORDER>(leds, NUM_LEDS);``` This is to be used with WS2812.     
-* ```LEDS.addLeds<LED_TYPE, LED_DT, LED_CK, COLOR_ORDER>(leds, NUM_LEDS);``` This is to be used with APA102
+* ```LEDS.addLeds<LED_TYPE, LED_DT, COLOR_ORDER>(leds, NUM_LEDS);``` _This is to be used with WS2812.     
+* ```LEDS.addLeds<LED_TYPE, LED_DT, LED_CK, COLOR_ORDER>(leds, NUM_LEDS);``` _This is to be used with APA102
    * Uncomment the method for your respective LED strip, and comment out the unused one.
 
 #### You are now ready to upload to the Arduino
@@ -91,7 +91,7 @@ _'com4'_ tells where to initialize serial communication for the Arduino, change 
 **The FastLED library allows for a virtually unlimited number of custom patterns**  
 
 * In order to add custom patterns, you need to:
-   * Add a animation function to the *controller.ino* file
+   * Add the animation function to the *controller.ino* file
    * Add a case statement inside the main loop for the new animation
    * Add one the range of the *mode* widget on the Blynk App
    * Add an elif statement to the ```@blynk.handle_event('write V2')``` method in the blynkmaster.py script to change the label for the current mode.
