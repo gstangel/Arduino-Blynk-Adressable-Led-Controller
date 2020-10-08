@@ -28,7 +28,7 @@ Next, clone my Blynk App by scanning this QR Code inside of Blynk
 
 ### Lets get the Arduino setup. ### 
 
-_controller.ino_ contains all the custom patterns which will be available on your controller, as well as the logic for communicating between _blynkmaster.py_ and your Arduino through USB Serial Communication.  
+_controller.ino_ contains all the custom patterns which will be available on your controller, as well as the logic for receiving commands from _blynkmaster.py_ through Serial USB communication.
 
 If you don't have the Arduino IDE downloaded, download it now.
 We need to install one package inside the Arduino IDE before we can upload the program.  
