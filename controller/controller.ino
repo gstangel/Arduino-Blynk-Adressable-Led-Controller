@@ -1,18 +1,25 @@
 #include "FastLED.h"
-#define LED_DT 7                                            // Data pin to connect to the strip.
-#define LED_CK 11                                             // Clock pin for WS2801 or APA102.
+#define LED_DT 7 // Data pin to connect to the strip.
+#define LED_CK 11 // Clock pin for WS2801 or APA102.
 #define COLOR_ORDER GRB // It's GRB for WS2812 and BGR for APA102.
 #define LED_TYPE WS2812B // Using APA102, WS2812, WS2812B, WS2801. Don't forget to change LEDS.addLeds.
 #define NUM_LEDS 150 // Total Number of Leds in the Array
 
+//Timers used for animations
 int millisTimer1 = millis();
-int millisTimer2 = millis(); // timers used for some of the patterns in place of delays
+int millisTimer2 = millis();
 
-uint8_t gHue = 0;       // Starting hue for patterns using sin functions
+//Global variabless
+uint8_t gHue = 0;       // Starting hue for animations using sin functions
 uint8_t brightness = 255; // Initial brightness (0-255)
 struct CRGB leds[NUM_LEDS]; // Initalize LED struct
 int mode = 0;   // Variable for the mode
+int currentRed = 255;  //start off white
+int currentGreen = 255; // start off white
+int currentBlue = 255; // start off white
+int pin, data1, data2, data3; // Incoming data bytes from serial stored as int
 
+//Setup to be ran once
 void setup() {
   Serial.begin(2400); // Start serial port, faster baud rates create problems when reading input through serial
   delay(1000); // Soft startup
@@ -21,39 +28,21 @@ void setup() {
   FastLED.setBrightness(brightness);// start off at max brightness
 }
 
-int currentRed = 255;  //start off white
-int currentGreen = 255; // start off white
-int currentBlue = 255; // start off white
 
-//set a solid color
-void setColors(int r, int g, int b) {
-  currentRed = r;
-  currentGreen = g;
-  currentBlue = b;
-  for (int i = 0; i < NUM_LEDS; i++) {
-    leds[i].r = currentRed;
-    leds[i].g = currentGreen;
-    leds[i].b = currentBlue;
-  }
-  FastLED.show();
-}
-
-int pin, data1, data2, data3; // Incoming data bytes from serial stored as int here
+//main loop
 void loop() {
-  
   //change the rate at which colors change
-  //used for mutiple patterns
+  //used for mutiple animations
   EVERY_N_MILLISECONDS(25) {
     gHue++;
   }
   //wait for all 4 data bytes to fill buffer
   if (Serial.available() > 3) {
-    
     pin = Serial.read(); // pin byte
     data1 = Serial.read(); // data byte 1
     data2 = Serial.read(); // data byte 2
     data3 = Serial.read(); // data byte 3
-
+    
     if (pin == 2) {// change mode
       mode = data1;
     }
@@ -70,7 +59,7 @@ void loop() {
       setColors(currentRed, currentGreen, currentBlue);// set the current color
     }
   }
-
+  //constantly checking mode and changing if new serial data comes in
   switch (mode) {
     case 0:                               
       setColors(currentRed, currentGreen, currentBlue);// solid color
@@ -88,7 +77,7 @@ void loop() {
       rainbow_march(200, 10); // rainbow 1
       break;
     case 5:
-      rainbow_march(220, 5); // rainbow 2
+      rainbow_march(220, 5); // rainbow 2 
       break;
     case 6:
       rainbow(); // rainbow 3
@@ -97,57 +86,72 @@ void loop() {
       rainbowWithGlitter(); // rainbow w/ glitter
       break;
     case 8:
-      confetti();
+      confetti(); //confetti animation
       break;
     case 9:
-      bpm(25);
+      bpm(25);  //BeatsPerMin, can change the arguement to change speed of animation
       break;
     case 10:
-      bpm(60);
+      bpm(60);  //BeatsPerMin, can change the arguement to change speed of animation
       break;
     case 11:
-      bpm(80);
+      bpm(80);  //BeatsPerMin, can change the arguement to change speed of animation
       break;
     case 12:
-      sinelon(10);
+      sinelon(10);  //Sinelon, can change the arguement to change speed of animation
       break;
     case 13:
-      sinelon(20);
+      sinelon(20);  //Sinelon, can change the arguement to change speed of animation
       break;
     case 14:
-      sinelon(40);
+      sinelon(40);  //Sinelon, can change the arguement to change speed of animation
       break;
     case 15:
-      inoise8_fire(20,3);
+      inoise8_fire(20,3);  //Fire1
       break;
     case 16:
-      inoise8_fire(50,2);
+      inoise8_fire(50,2); //Fire2
       break;
     case 17:
-      juggle(8,4);
+      juggle(8,4); //Juggle1
       break;
     case 18:
-      juggle(16,4);
+      juggle(16,4); //juggle2
       break;
     case 19:
-      juggle(32,4);
+      juggle(32,4);// juggle 3
       break;
     case 20:
-      juggle(8,8);
+      juggle(8,8); //juggle4
       break;
     case 21:
-      juggle(16,8);
+      juggle(16,8); // juggle5
       break;
     case 22:
-      juggle(32,8);
+      juggle(32,8); // juggle 6
       break;
   }
-  FastLED.show();
+  FastLED.show(); // Update the animation with every loop
 
 }
 
-void beatwave(uint8_t beatsPerMin ) {
+///////animations/////////
 
+//set a solid color
+void setColors(int r, int g, int b) {
+  currentRed = r;
+  currentGreen = g;
+  currentBlue = b;
+  for (int i = 0; i < NUM_LEDS; i++) {
+    leds[i].r = currentRed;
+    leds[i].g = currentGreen;
+    leds[i].b = currentBlue;
+  }
+  FastLED.show();
+}
+
+//Beatwave
+void beatwave(uint8_t beatsPerMin ) {
   TBlendType    currentBlending = LINEARBLEND;
   CRGBPalette16 currentPalette = RainbowColors_p;
   CRGBPalette16 targetPalette;
@@ -169,37 +173,33 @@ void beatwave(uint8_t beatsPerMin ) {
   if (millis() - millisTimer2 > 5000) {
     millisTimer2 = millis();
     targetPalette = CRGBPalette16(CHSV(random8(), 255, random8(128, 255)), CHSV(random8(), 255, random8(128, 255)), CHSV(random8(), 192, random8(128, 255)), CHSV(random8(), 255, random8(128, 255)));
-
   }
   FastLED.show();
 
 }
 
+//Rainbow March
 void rainbow_march(uint8_t thisdelay, uint8_t deltahue) {     // The fill_rainbow call doesn't support brightness levels.
-
   uint8_t thishue = millis() * (255 - thisdelay) / 255;       // To change the rate, add a beat or something to the result. 'thisdelay' must be a fixed value.
-
-
   fill_rainbow(leds, NUM_LEDS, thishue, deltahue);            // Use FastLED's fill_rainbow routine.
 
 } // rainbow_march()
 
 
+//Simple Rainbow
 void rainbow() {
   fill_rainbow(leds, NUM_LEDS, gHue, 7);                      // FastLED's built-in rainbow generator.
 
 } // rainbow()
 
 
-
+//Rainbow + glitter
 void rainbowWithGlitter() {
 
   rainbow();                                                  // Built-in FastLED rainbow, plus some random sparkly glitter.
   addGlitter(80);
 
 } // rainbowWithGlitter()
-
-
 
 void addGlitter(fract8 chanceOfGlitter) {
 
@@ -210,7 +210,7 @@ void addGlitter(fract8 chanceOfGlitter) {
 } // addGlitter()
 
 
-
+//Confetti
 void confetti() {
   // Random colored speckles that blink in and fade smoothly.
   fadeToBlackBy(leds, NUM_LEDS, 10);
@@ -219,7 +219,7 @@ void confetti() {
 
 }
 
-
+//Sine wave animation
 void sinelon(uint8_t beatsPerMin ) {
   // A colored dot sweeping back and forth, with fading trails.
   // beatsPerMin designates speed at which it moves
@@ -229,22 +229,21 @@ void sinelon(uint8_t beatsPerMin ) {
 
 }
 
-
-
+//Beats Per Min
 void bpm(uint8_t beatsPerMinute) {
   // colored sections sweeping back and forth
   // beatsPerMin designates speed at which it sweeps
   CRGBPalette16 palette = PartyColors_p;
   uint8_t beat = beatsin8(beatsPerMinute, 64, 255);
-
   for (int i = 0; i < NUM_LEDS; i++) { //9948
     leds[i] = ColorFromPalette(palette, gHue + (i * 2), beat - gHue + (i * 10));
   }
 
 }
 
+//Juggle animation
 void juggle(int hueChange, int juggleSpeed) {
-  // pattern where the colors appear to juggle
+  // animation where the colors appear to juggle
   // hueChange designates the difference in color beteween 'balls'
   fadeToBlackBy(leds, NUM_LEDS, 20);
   byte dothue = 0;
@@ -253,9 +252,10 @@ void juggle(int hueChange, int juggleSpeed) {
     leds[beatsin16(i + juggleSpeed, 0, NUM_LEDS - 1)] |= CHSV(dothue, 200, 255);
     dothue += hueChange;
   }
-
 }
 
+
+//Campfire animation
 void inoise8_fire(uint32_t xscale, uint32_t yscale) {                
   uint8_t index = 0;
   CRGBPalette16 currentPalette = CRGBPalette16(
@@ -270,9 +270,8 @@ void inoise8_fire(uint32_t xscale, uint32_t yscale) {
   }
 }
 
-
+//Sunrise, gradually fades to a solid color in sunriseLength time
 void sunrise() {
-
   // total sunrise length, in minutes
   static const uint8_t sunriseLength = 30;
 
