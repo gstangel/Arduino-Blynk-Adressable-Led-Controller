@@ -23,7 +23,7 @@ Let's start this guide by getting the Blynk setup on the smartphone.  After down
 Next, clone my Blynk App using this QR code by scanning this QR Code inside of Blynk  
 ![alt text](https://github.com/gabrielsaintangel/Arduino-Adressable-Led-Controller/blob/main/qr.jpg?raw=false=50x50)
 
-**You should now have the Controller Setup on Blynk, and have a Auth Token that will be used in the python script to communicate with your instance of the app.**
+**You should now have the Controller Setup on Blynk, and have a Auth Token emailed to you that will be used in the python script to communicate with your instance of the app.**
 
 
 ### Lets get the Arduino setup. ### 
