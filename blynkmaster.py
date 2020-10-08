@@ -6,7 +6,7 @@ import time
 #Change 'com4' to reflex your arduino's current port
 ser = serial.Serial('com4', 2400, timeout=1)
 
-#Insert your Blynk Auth Token here
+#Insert your Blynk Auth Token here 
 BLYNK_AUTH = ''
 
 # initialize Blynk with the AUTH token
